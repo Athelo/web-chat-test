@@ -3,7 +3,7 @@ import React from 'react'
 const ChatBar = ({users, onlineUsers}) => {
 
 const logOut = () => {
-    localStorage.removeItem("userName")
+    localStorage.removeItem("token")
     window.location.href = "/"
 }
 
@@ -30,7 +30,7 @@ const logOut = () => {
             </div>
         </div>
         {
-          localStorage.getItem("userName") ?
+          localStorage.getItem("token") ?
           <div className='navbar__footer'>
             <h1>Welcome {localStorage.getItem("userName")}</h1>
             <button className='logout__btn' onClick={logOut}>LogOut</button>

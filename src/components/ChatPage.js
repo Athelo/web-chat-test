@@ -20,7 +20,7 @@ const ChatPage = ({socket}) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "userName": localStorage.getItem("userName"),
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then(response => {

@@ -9,10 +9,10 @@ const ChatFooter = ({socket, roomCode}) => {
 
     const handleSendMessage = (e) => {
         e.preventDefault()
-        if(message.trim() && localStorage.getItem("userName")) {
+        if(message.trim() && localStorage.getItem("token")) {
         socket.emit("message", 
             {
-            roomCode: roomCode,
+            roomId: roomCode,
             text: message,
             sender: localStorage.getItem("userName"),
             socketID: socket.id

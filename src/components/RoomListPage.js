@@ -15,7 +15,7 @@ const RoomListPage = ({rooms}) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "userName": localStorage.getItem("userName"),
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
         },
       })
         .then(response => {
@@ -40,11 +40,11 @@ const RoomListPage = ({rooms}) => {
     fetch("/api/v1/chats/room/", {
       method: "POST",
       headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        userName: localStorage.getItem("userName"),
-        roomName: newRoomName,
+        room_name: newRoomName,
       }),
     })
       .then(response => {
@@ -57,7 +57,7 @@ const RoomListPage = ({rooms}) => {
         }
       })
       .then(data => {
-        window.location.href = `/room/${data.code}`
+        window.location.href = `/room/${data.id}`
       })
       .catch(error => {
         console.log(error)
@@ -70,7 +70,7 @@ const RoomListPage = ({rooms}) => {
       <div>
           <h4  className='rooms__header'>Available Rooms</h4>
           <div className='room__names'>
-              {allRooms.map(room =><p key={room.code}> <a href={`/room/${room.code}`}>{room.name}</a></p>)}
+              {allRooms.map(room =><p key={room.id}> <a href={`/room/${room.id}`}>{room.name}</a></p>)}
           </div>
           <div>
             <label htmlFor="new_room_name">RoomName</label>
@@ -78,7 +78,7 @@ const RoomListPage = ({rooms}) => {
             <button className='create_room__btn' onClick={createRoom}>Create Room</button>
           </div>
           {
-            localStorage.getItem("userName") ?
+            localStorage.getItem("token") ?
             <div className='navbar__footer'>
               <h1>Welcome {localStorage.getItem("userName")}</h1>
               <button className='logout__btn' onClick={logOut}>LogOut</button>

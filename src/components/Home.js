@@ -3,7 +3,7 @@ import { useNavigate} from "react-router-dom"
 
 const Home = ({socket, setRooms}) => {
   const navigate = useNavigate()
-    const [userName, setUserName] = useState("")
+    const [token, setToken] = useState("")
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -14,17 +14,18 @@ const Home = ({socket, setRooms}) => {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            userName: userName,
-            device_identifier: `${navigator.userAgent}:${userName}`,
+            token,
+            device_identifier: `${navigator.userAgent}:${token}`,
           }),
         })
           .then((response) => response.json())
           .then((responseData) => {
             socket.connect()
-            socket.emit('sign_in', { userName })
-            localStorage.setItem("userName", userName)
+            socket.emit('sign_in', { userId: responseData.id })
+            localStorage.setItem("token", token)
+            localStorage.setItem("userName", responseData.name)
             if (responseData.newUser) {
-              socket.emit("newUser", {userName, socketID: socket.id})
+              socket.emit("newUser", {userId: responseData.id, socketID: socket.id})
               navigate("/chat")
               return;
             }
@@ -36,13 +37,13 @@ const Home = ({socket, setRooms}) => {
   return (
     <form className='home__container' onSubmit={handleSubmit}>
         <h2 className='home__header'>Sign in to Open Chat</h2>
-        <label htmlFor="username">Username</label>
+        <label htmlFor="username">Google Auth Token</label>
         <input type="text"
           name="username"
           id='username'
           className='username__input'
-          value={userName}
-          onChange={e => setUserName(e.target.value)}
+          value={token}
+          onChange={e => setToken(e.target.value)}
         />
         <button className='home__cta'>SIGN IN</button>
     </form>
