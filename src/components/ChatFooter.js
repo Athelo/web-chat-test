@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-const ChatFooter = ({socket, roomCode}) => {
+const ChatFooter = ({socket, messageChannelId}) => {
     const [message, setMessage] = useState("")
     const handleTyping = () => socket.emit("typing", {
       userName: localStorage.getItem("userName"),
@@ -12,9 +12,9 @@ const ChatFooter = ({socket, roomCode}) => {
         if(message.trim() && localStorage.getItem("token")) {
         socket.emit("message", 
             {
-            roomId: roomCode,
+            messageChannelId,
             text: message,
-            sender: localStorage.getItem("userName"),
+            senderName: localStorage.getItem("userName"),
             socketID: socket.id
             }
         )

@@ -14,6 +14,22 @@
   justify-content: center;
   align-items: center;
 }
+
+.login__container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.loading_spinner__container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .home__container > * {
   margin-bottom: 10px;
 }

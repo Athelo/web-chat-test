@@ -3,20 +3,22 @@ import { useParams } from "react-router-dom"
 import ChatBar from './ChatBar'
 import ChatBody from './ChatBody'
 import ChatFooter from './ChatFooter'
+import LoadingSpinner from './LoadingSpinner'
 
 const ChatPage = ({socket}) => {
   const [messages, setMessages] = useState([])
   const [typingStatus, setTypingStatus] = useState("")
   const lastMessageRef = useRef(null)
-  const { room_code } = useParams()
+  const { messageChannelId } = useParams()
   const [users, setUsers] = useState([])
   const [success, setSuccess] = useState(false)
   const [onlineUsers, setOnlineUsers] = useState([])
-  const [roomInfo, setRoomInfo] = useState({})
+  const [channelInfo, setChannelInfo] = useState({})
   const [loading, setLoading] = useState(true)
 
   useEffect(()=> {
-    fetch(`/api/v1/chats/room/${room_code}/`, {
+    setLoading(true)
+    fetch(`/api/v1/message-channels/${messageChannelId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -33,18 +35,19 @@ const ChatPage = ({socket}) => {
         }
       })
       .then(data => {
-        const rooomInfo = data.room_info
+        const channelInfo = data.message_channel_details
         const webSocketToken = data.websocket_token
         setSuccess(true)
-        setMessages(rooomInfo.messages)
-        setUsers(rooomInfo.members)
-        setOnlineUsers(rooomInfo.onlineUsers)
-        setRoomInfo(rooomInfo)
-        socket.emit("join_room", 
-            {
-            roomCode: room_code,
-            userName: localStorage.getItem("userName"),
-            }
+        setMessages(channelInfo.messages)
+        setUsers(channelInfo.members)
+        setChannelInfo(channelInfo)
+
+        setOnlineUsers(channelInfo.members.filter(member => member.is_online).map(member => member.id))
+        socket.emit("join_message_channel", 
+          {
+            messageChannelId,
+            userId: localStorage.getItem("userId"),
+          }
         )
         socket.disconnect()
         socket.io.opts.extraHeaders = {
@@ -55,8 +58,11 @@ const ChatPage = ({socket}) => {
       })
       .catch(error => {
         console.log(error)
+        setLoading(false)
+        localStorage.removeItem("token")
+        window.location.href = "/"
       })
-  }, [room_code])
+  }, [messageChannelId])
 
 
   useEffect(()=> {
@@ -81,12 +87,13 @@ const ChatPage = ({socket}) => {
   }, [socket])
 
   useEffect(()=> {
-    socket.on("joinRoomResponse", (data) => {
+    socket.on("joinMessageChannelResponse", (data) => {
+      console.log(data)
       setOnlineUsers(data)
     })
 
     return () => {
-      socket.off('joinRoomResponse');
+      socket.off('joinMessageChannelResponse');
     };
   }, [socket])
 
@@ -112,6 +119,11 @@ const ChatPage = ({socket}) => {
   }, [socket])
 
   return (
+    <>
+    {
+      loading ?
+      <LoadingSpinner/>
+    :
     <div className="chat">
       {
         !success && !loading &&
@@ -120,15 +132,17 @@ const ChatPage = ({socket}) => {
       {
         !loading && success &&
         <>
-          {/* <a href="/rooms_list">Back</a> */}
-          <ChatBar users={users} onlineUsers={onlineUsers}/>
+          <ChatBar socket={socket} users={users} onlineUsers={onlineUsers}/>
           <div className='chat__main'>
-            <ChatBody messages={messages} typingStatus={typingStatus} lastMessageRef={lastMessageRef} roomName={roomInfo.name}/>
-            <ChatFooter socket={socket} roomCode={room_code}/>
+            <ChatBody messages={messages} typingStatus={typingStatus} lastMessageRef={lastMessageRef} channelName={messageChannelId}/>
+            <ChatFooter socket={socket} messageChannelId={messageChannelId}/>
           </div>
         </>
       }
     </div>
+    }
+    </>
+    
   )
 }
 

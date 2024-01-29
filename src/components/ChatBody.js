@@ -1,13 +1,13 @@
 import React from 'react'
 import {useNavigate} from "react-router-dom"
 
-const ChatBody = ({messages, typingStatus, lastMessageRef, roomName}) => { 
+const ChatBody = ({messages, typingStatus, lastMessageRef, channelName}) => { 
   const navigate = useNavigate()
 
   
 
-  const goToRoomList = () => {
-    navigate("/rooms_list")
+  const goToMessageChannelList = () => {
+    navigate("/message_channels")
   }
 
   const filtered_messages = messages.filter(message => message && message.sender !== undefined)
@@ -15,8 +15,8 @@ const ChatBody = ({messages, typingStatus, lastMessageRef, roomName}) => {
   return (
     <>
       <header className='chat__mainHeader'>
-          <p><strong>{roomName}</strong></p>
-          <button className='leaveChat__btn' onClick={goToRoomList}>Go To Room List</button>
+          <p><strong>{channelName}</strong></p>
+          <button className='leaveChat__btn' onClick={goToMessageChannelList}>Channel List</button>
         </header>
 
 

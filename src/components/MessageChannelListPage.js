@@ -1,17 +1,21 @@
 import React, {useEffect, useState} from 'react'
+import LoadingSpinner from './LoadingSpinner'
 
-const RoomListPage = ({rooms}) => {
+const MessageChannelListPage = ({socket, messageChannels}) => {
 
-  const [allRooms, setAllRooms] = useState(rooms)
+  const [allMessageChannels, setAllMessageChannels] = useState(messageChannels)
   const [newRoomName, setNewRoomName] = useState("")
+  const [isLoading, setIsLoading] = useState(true)
   const logOut = () => {
-    localStorage.removeItem("userName")
+    localStorage.removeItem("token")
+    socket.disconnect()
     window.location.href = "/"
 }
 
   useEffect(()=> {
-    if (!rooms.length) {
-      fetch(`/api/v1/chats/rooms/`, {
+    if (!allMessageChannels.length) {
+      setIsLoading(true)
+      fetch(`/api/v1/message-channels/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -28,15 +32,26 @@ const RoomListPage = ({rooms}) => {
           }
         })
         .then(data => {
-          setAllRooms(data)
+          const channels = data.map(channel => {
+            return {
+              id: channel.id,
+              name: channel.users.map(user => user).join(", ")
+            }
+          })
+          setAllMessageChannels(channels)
+          setIsLoading(false)
         })
         .catch(error => {
+          setIsLoading(false)
           console.log(error)
+          localStorage.removeItem("token")
+          window.location.href = "/"
         })
       }
-  }, [rooms])
+  }, [messageChannels])
 
   const createRoom = () => {
+    setIsLoading(true)
     fetch("/api/v1/chats/room/", {
       method: "POST",
       headers: {
@@ -60,17 +75,22 @@ const RoomListPage = ({rooms}) => {
         window.location.href = `/room/${data.id}`
       })
       .catch(error => {
+        setIsLoading(false)
         console.log(error)
       })
   }
   
   return (
-    <div className="rooms">
-      <h2>Rooms list</h2>
+    <>
+    {isLoading ?
+    <LoadingSpinner/>
+     :
+     <div className="rooms">
+      <h2>Message Channels list</h2>
       <div>
-          <h4  className='rooms__header'>Available Rooms</h4>
+          <h4  className='rooms__header'>Available Channels</h4>
           <div className='room__names'>
-              {allRooms.map(room =><p key={room.id}> <a href={`/room/${room.id}`}>{room.name}</a></p>)}
+              {allMessageChannels.map(channel =><p key={channel.id}> <a href={`/message_channel/${channel.id}`}>{channel.id}</a></p>)}
           </div>
           <div>
             <label htmlFor="new_room_name">RoomName</label>
@@ -86,8 +106,11 @@ const RoomListPage = ({rooms}) => {
             : null
           }
       </div>
-    </div>
+    </div> 
+     }
+    </>
+    
   )
 }
 
-export default RoomListPage
+export default MessageChannelListPage

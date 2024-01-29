@@ -1,11 +1,11 @@
 import React from 'react'
 
-const ChatBar = ({users, onlineUsers}) => {
-
-const logOut = () => {
+const ChatBar = ({socket, users, onlineUsers}) => {
+  const logOut = () => {
     localStorage.removeItem("token")
+    socket.disconnect()
     window.location.href = "/"
-}
+  }
 
   return (
     <div className='chat__sidebar'>
@@ -15,11 +15,11 @@ const logOut = () => {
             <div className='chat__users'>
                 {
                 users.map(user => 
-                <div key={user} className='user__status'>
-                    {user} 
-                    <span className={onlineUsers.indexOf(user) !== -1 ? 'status__online': 'status__offline'}>
+                <div key={user.id} className='user__status'>
+                    {user.name}
+                    <span className={onlineUsers.indexOf(user.id) !== -1 ? 'status__online': 'status__offline'}>
                         {
-                            onlineUsers.indexOf(user) !== -1 ?
+                            onlineUsers.indexOf(user.id) !== -1 ?
                             'Online'
                             :
                             'Offline'
