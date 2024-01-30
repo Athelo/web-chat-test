@@ -4,8 +4,9 @@ import ChatPage from "./components/ChatPage";
 import MessageChannelListPage from "./components/MessageChannelListPage";
 import io from 'socket.io-client';
 import Login from './components/Login';
+import { backendUrl } from './config';
 
-const socket = io("http://localhost:5001")
+const socket = io(backendUrl,  { withCredentials: true})
 function App() {
   const [messageChannels, setMessageChannels] = useState([])
 

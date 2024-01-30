@@ -1,5 +1,6 @@
 import React, {useState} from 'react'
 import { useNavigate} from "react-router-dom"
+import { backendUrl } from '../config';
 
 const Home = ({socket, setRooms}) => {
   const navigate = useNavigate()
@@ -8,7 +9,7 @@ const Home = ({socket, setRooms}) => {
     const handleSubmit = (e) => {
         e.preventDefault()
 
-        fetch("/api/v1/chats/sign-in", {
+        fetch(`${backendUrl}/api/v1/chats/sign-in`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

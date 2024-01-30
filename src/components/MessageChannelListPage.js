@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import LoadingSpinner from './LoadingSpinner'
+import { backendUrl } from '../config';
 
 const MessageChannelListPage = ({socket, messageChannels}) => {
 
@@ -15,7 +16,7 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
   useEffect(()=> {
     if (!allMessageChannels.length) {
       setIsLoading(true)
-      fetch(`/api/v1/message-channels/`, {
+      fetch(`${backendUrl}/api/v1/message-channels/`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

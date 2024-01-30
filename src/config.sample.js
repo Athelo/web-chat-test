@@ -6,3 +6,6 @@ export const firebaseConfig = {
     messagingSenderId: "",
     appId: ""
 }
+
+export const backendUrl = "http://localhost:5001"
+

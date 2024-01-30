@@ -3,6 +3,7 @@ import { useNavigate} from "react-router-dom"
 import { useEffect, useState } from 'react'
 import { signInWithGooglePopup } from "./firebase"
 import LoadingSpinner from './LoadingSpinner'
+import { backendUrl } from '../config';
 
 
 const Login = ({socket, setMessageChannels}) => {
@@ -15,7 +16,7 @@ const Login = ({socket, setMessageChannels}) => {
 
         setIsLoading(true)
 
-        fetch("/api/v1/chats/sign-in", {
+        fetch(`${backendUrl}/api/v1/chats/sign-in`, {
             method: "POST",
             headers: {
               "Content-Type": "application/json",

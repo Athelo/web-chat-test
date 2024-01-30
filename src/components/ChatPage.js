@@ -4,6 +4,7 @@ import ChatBar from './ChatBar'
 import ChatBody from './ChatBody'
 import ChatFooter from './ChatFooter'
 import LoadingSpinner from './LoadingSpinner'
+import { backendUrl } from '../config'
 
 const ChatPage = ({socket}) => {
   const [messages, setMessages] = useState([])
@@ -18,7 +19,7 @@ const ChatPage = ({socket}) => {
 
   useEffect(()=> {
     setLoading(true)
-    fetch(`/api/v1/message-channels/${messageChannelId}/`, {
+    fetch(`${backendUrl}/api/v1/message-channels/${messageChannelId}/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -43,17 +44,17 @@ const ChatPage = ({socket}) => {
         setChannelInfo(channelInfo)
 
         setOnlineUsers(channelInfo.members.filter(member => member.is_online).map(member => member.id))
+        socket.disconnect()
+        socket.io.opts.extraHeaders = {
+          "WEBSOCKET_TOKEN": webSocketToken
+        };
+        socket.connect()
         socket.emit("join_message_channel", 
           {
             messageChannelId,
             userId: localStorage.getItem("userId"),
           }
         )
-        socket.disconnect()
-        socket.io.opts.extraHeaders = {
-          "WEBSOCKET_TOKEN": webSocketToken
-        };
-        socket.connect()
         setLoading(false)
       })
       .catch(error => {
