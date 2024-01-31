@@ -119,7 +119,7 @@
 .message__container {
   position: relative;
   width: 100%;
-  height: 80vh;
+  height: calc(90vh - 70px);
   background-color: #fff;
   padding: 20px;
   overflow-y: scroll;
@@ -131,7 +131,7 @@
 .chat__footer {
   padding: 10px;
   background-color: #F9F5EB;
-  height: 10vh;
+  height: 70px;
 }
 .form {
   width: 100%;
@@ -193,8 +193,8 @@ font-size: 15px;
   text-align: right;
 }
 .message__status {
-  position: absolute;
-  bottom: 0;
+  position: fixed;
+  bottom: 45px;
   font-size: 13px;
   font-style: italic;
 }

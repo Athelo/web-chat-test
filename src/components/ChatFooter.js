@@ -11,14 +11,14 @@ const ChatFooter = ({socket, messageChannelId}) => {
         e.preventDefault()
         if(message.trim() && localStorage.getItem("mySession")) {
           console.log(socket.io.opts.extraHeaders)
-        socket.emit("message", 
-            {
-            messageChannelId,
-            text: message,
-            senderName: localStorage.getItem("userName"),
-            socketID: socket.id
-            }
-        )
+          socket.emit("message", 
+              {
+              messageChannelId,
+              text: message,
+              senderName: localStorage.getItem("userName"),
+              socketID: socket.id
+              }
+          )
         }
         setMessage("")
     }

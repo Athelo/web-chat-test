@@ -44,7 +44,8 @@ const ChatPage = ({socket}) => {
         setOnlineUsers(channelInfo.members.filter(member => member.is_online).map(member => member.id))
         socket.disconnect()
         socket.io.opts.extraHeaders = {
-          "WEBSOCKET_TOKEN": webSocketToken
+          "websockettoken": webSocketToken,
+          "maintoken": localStorage.getItem("mySession"),
         };
         socket.connect()
         socket.emit("join_message_channel", 

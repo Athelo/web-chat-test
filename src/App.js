@@ -6,7 +6,7 @@ import io from 'socket.io-client';
 import Login from './components/Login';
 import { backendUrl } from './config';
 
-const socket = io("http://localhost:5000",  {
+const socket = io("http://localhost:8000",  {
   // transports: ['websocket'],
   withCredentials: true
 })
