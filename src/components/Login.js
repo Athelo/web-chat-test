@@ -12,7 +12,7 @@ const Login = ({socket, setMessageChannels}) => {
     const logGoogleUser = async () => {
         const response = await signInWithGooglePopup()
         const token = response.user.accessToken
-        localStorage.setItem("token", token)
+        localStorage.setItem("mySession", token)
 
         setIsLoading(true)
 
@@ -31,7 +31,7 @@ const Login = ({socket, setMessageChannels}) => {
               setIsLoading(false)
               socket.connect()
               socket.emit('sign_in', { userId: responseData.id })
-              localStorage.setItem("token", token)
+              localStorage.setItem("mySession", token)
               localStorage.setItem("userName", responseData.name)
               localStorage.setItem("userId", responseData.id)
               if (responseData.newUser) {
@@ -45,7 +45,7 @@ const Login = ({socket, setMessageChannels}) => {
     }
 
     useEffect(() => {
-        if (localStorage.getItem("token")) {
+        if (localStorage.getItem("mySession")) {
             navigate("/message_channels")
         }
     })

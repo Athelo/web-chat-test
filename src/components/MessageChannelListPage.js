@@ -8,7 +8,7 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
   const [newRoomName, setNewRoomName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const logOut = () => {
-    localStorage.removeItem("token")
+    localStorage.removeItem("mySession")
     socket.disconnect()
     window.location.href = "/"
 }
@@ -20,7 +20,7 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Authorization": `Bearer ${localStorage.getItem("mySession")}`,
         },
       })
         .then(response => {
@@ -45,8 +45,9 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
         .catch(error => {
           setIsLoading(false)
           console.log(error)
-          localStorage.removeItem("token")
-          window.location.href = "/"
+          console.log("removing token")
+          // localStorage.removeItem("mySession")
+          // window.location.href = "/"
         })
       }
   }, [messageChannels])
@@ -56,7 +57,7 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
     fetch("/api/v1/chats/room/", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Authorization": `Bearer ${localStorage.getItem("mySession")}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
@@ -99,7 +100,7 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
             <button className='create_room__btn' onClick={createRoom}>Create Room</button>
           </div>
           {
-            localStorage.getItem("token") ?
+            localStorage.getItem("mySession") ?
             <div className='navbar__footer'>
               <h1>Welcome {localStorage.getItem("userName")}</h1>
               <button className='logout__btn' onClick={logOut}>LogOut</button>

@@ -14,7 +14,6 @@ const ChatPage = ({socket}) => {
   const [users, setUsers] = useState([])
   const [success, setSuccess] = useState(false)
   const [onlineUsers, setOnlineUsers] = useState([])
-  const [channelInfo, setChannelInfo] = useState({})
   const [loading, setLoading] = useState(true)
 
   useEffect(()=> {
@@ -23,7 +22,7 @@ const ChatPage = ({socket}) => {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        "Authorization": `Bearer ${localStorage.getItem("mySession")}`,
       },
     })
       .then(response => {
@@ -41,7 +40,6 @@ const ChatPage = ({socket}) => {
         setSuccess(true)
         setMessages(channelInfo.messages)
         setUsers(channelInfo.members)
-        setChannelInfo(channelInfo)
 
         setOnlineUsers(channelInfo.members.filter(member => member.is_online).map(member => member.id))
         socket.disconnect()
@@ -60,10 +58,10 @@ const ChatPage = ({socket}) => {
       .catch(error => {
         console.log(error)
         setLoading(false)
-        localStorage.removeItem("token")
+        localStorage.removeItem("mySession")
         window.location.href = "/"
       })
-  }, [messageChannelId])
+  }, [])
 
 
   useEffect(()=> {

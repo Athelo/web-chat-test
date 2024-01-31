@@ -6,7 +6,10 @@ import io from 'socket.io-client';
 import Login from './components/Login';
 import { backendUrl } from './config';
 
-const socket = io(backendUrl,  { withCredentials: true})
+const socket = io("http://localhost:5000",  {
+  // transports: ['websocket'],
+  withCredentials: true
+})
 function App() {
   const [messageChannels, setMessageChannels] = useState([])
 

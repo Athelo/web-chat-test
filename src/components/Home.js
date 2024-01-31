@@ -23,7 +23,7 @@ const Home = ({socket, setRooms}) => {
           .then((responseData) => {
             socket.connect()
             socket.emit('sign_in', { userId: responseData.id })
-            localStorage.setItem("token", token)
+            localStorage.setItem("mySession", token)
             localStorage.setItem("userName", responseData.name)
             if (responseData.newUser) {
               socket.emit("newUser", {userId: responseData.id, socketID: socket.id})
