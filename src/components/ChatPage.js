@@ -59,8 +59,8 @@ const ChatPage = ({socket}) => {
       .catch(error => {
         console.log(error)
         setLoading(false)
-        localStorage.removeItem("mySession")
-        window.location.href = "/"
+        // localStorage.removeItem("mySession")
+        // window.location.href = "/"
       })
   }, [])
 

@@ -4,9 +4,9 @@ import ChatPage from "./components/ChatPage";
 import MessageChannelListPage from "./components/MessageChannelListPage";
 import io from 'socket.io-client';
 import Login from './components/Login';
-import { backendUrl } from './config';
+import { socketUrl } from './config';
 
-const socket = io("http://localhost:8000",  {
+const socket = io(socketUrl,  {
   // transports: ['websocket'],
   withCredentials: true
 })

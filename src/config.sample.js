@@ -7,5 +7,6 @@ export const firebaseConfig = {
     appId: ""
 }
 
-export const backendUrl = "http://localhost:5001"
+export const backendUrl = "http://localhost:8080"
+export const socketUrl = "http://localhost:5002/chat"
 
