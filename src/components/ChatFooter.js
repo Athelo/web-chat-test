@@ -10,7 +10,6 @@ const ChatFooter = ({socket, messageChannelId}) => {
     const handleSendMessage = (e) => {
         e.preventDefault()
         if(message.trim() && localStorage.getItem("mySession")) {
-          console.log(socket.io.opts.extraHeaders)
           socket.emit("message", 
               {
               messageChannelId,

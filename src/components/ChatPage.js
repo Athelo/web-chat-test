@@ -88,7 +88,6 @@ const ChatPage = ({socket}) => {
 
   useEffect(()=> {
     socket.on("joinMessageChannelResponse", (data) => {
-      console.log(data)
       setOnlineUsers(data)
     })
 

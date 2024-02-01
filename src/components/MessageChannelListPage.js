@@ -46,8 +46,8 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
           setIsLoading(false)
           console.log(error)
           console.log("removing token")
-          // localStorage.removeItem("mySession")
-          // window.location.href = "/"
+          localStorage.removeItem("mySession")
+          window.location.href = "/"
         })
       }
   }, [messageChannels])
@@ -92,13 +92,13 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
       <div>
           <h4  className='rooms__header'>Available Channels</h4>
           <div className='room__names'>
-              {allMessageChannels.map(channel =><p key={channel.id}> <a href={`/message_channel/${channel.id}`}>{channel.id}</a></p>)}
+              {allMessageChannels.map(channel =><p key={channel.id}> <a href={`/message_channel/${channel.id}`}>{channel.id}</a> Users: {channel.name}</p>)}
           </div>
-          <div>
+          {/* <div>
             <label htmlFor="new_room_name">RoomName</label>
             <input name='new_room_name' value={newRoomName} onChange={(e) => setNewRoomName(e.target.value)}/>
             <button className='create_room__btn' onClick={createRoom}>Create Room</button>
-          </div>
+          </div> */}
           {
             localStorage.getItem("mySession") ?
             <div className='navbar__footer'>

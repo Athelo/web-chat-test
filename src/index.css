@@ -215,3 +215,6 @@ font-size: 15px;
 .status__offline {
   color: red;
 }
+.room__names {
+  padding: 10px;
+}
