@@ -1,12 +1,13 @@
 import React from 'react'
 import {useNavigate} from "react-router-dom"
 
-const ChatBody = ({messages, typingStatus, lastMessageRef, channelName}) => { 
+const ChatBody = ({socket, messages, typingStatus, lastMessageRef, channelName}) => { 
   const navigate = useNavigate()
 
   
 
   const goToMessageChannelList = () => {
+    socket.disconnect()
     navigate("/message_channels")
   }
 

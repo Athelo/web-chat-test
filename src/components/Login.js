@@ -1,17 +1,19 @@
 import GoogleButton from 'react-google-button'
 import { useNavigate} from "react-router-dom"
 import { useEffect, useState } from 'react'
+import io from 'socket.io-client';
 import { signInWithGooglePopup } from "./firebase"
 import LoadingSpinner from './LoadingSpinner'
-import { backendUrl } from '../config';
+import { backendUrl, socketUrl } from '../config';
 
 
-const Login = ({socket, setMessageChannels}) => {
+const Login = ({setMessageChannels}) => {
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(false)
     const logGoogleUser = async () => {
         const response = await signInWithGooglePopup()
         const token = response.user.accessToken
+        // const refreshToken = response.user.stsTokenManager.refreshToken
         localStorage.setItem("mySession", token)
 
         setIsLoading(true)
@@ -29,16 +31,15 @@ const Login = ({socket, setMessageChannels}) => {
             .then((response) => response.json())
             .then((responseData) => {
               setIsLoading(false)
-              socket.connect()
-              socket.emit('sign_in', { userId: responseData.id })
+              // const loginSocket = io(`${socketUrl}/login`,  {
+              //   // transports: ['websocket'],
+              //   withCredentials: true
+              // })
+              // loginSocket.connect()
+              // loginSocket.emit('sign_in', { userId: responseData.id })
               localStorage.setItem("mySession", token)
               localStorage.setItem("userName", responseData.name)
               localStorage.setItem("userId", responseData.id)
-              if (responseData.newUser) {
-                socket.emit("newUser", {userId: responseData.id, socketID: socket.id})
-                navigate("/chat")
-                return;
-              }
               setMessageChannels(responseData.message_channels)
               navigate("/message_channels")
             });

@@ -2,18 +2,17 @@ import React, {useEffect, useState} from 'react'
 import LoadingSpinner from './LoadingSpinner'
 import { backendUrl } from '../config';
 
-const MessageChannelListPage = ({socket, messageChannels}) => {
+const MessageChannelListPage = ({messageChannels}) => {
 
   const [allMessageChannels, setAllMessageChannels] = useState(messageChannels)
-  const [newRoomName, setNewRoomName] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const logOut = () => {
     localStorage.removeItem("mySession")
-    socket.disconnect()
     window.location.href = "/"
 }
 
   useEffect(()=> {
+    console.log(allMessageChannels);
     if (!allMessageChannels.length) {
       setIsLoading(true)
       fetch(`${backendUrl}/api/v1/message-channels/`, {
@@ -52,36 +51,6 @@ const MessageChannelListPage = ({socket, messageChannels}) => {
       }
   }, [messageChannels])
 
-  const createRoom = () => {
-    setIsLoading(true)
-    fetch("/api/v1/chats/room/", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${localStorage.getItem("mySession")}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        room_name: newRoomName,
-      }),
-    })
-      .then(response => {
-        if (response.ok) {
-          return response.json()
-        } else if(response.status === 404) {
-          return Promise.reject('error 404')
-        } else {
-          return Promise.reject('some other error: ' + response.status)
-        }
-      })
-      .then(data => {
-        window.location.href = `/room/${data.id}`
-      })
-      .catch(error => {
-        setIsLoading(false)
-        console.log(error)
-      })
-  }
-  
   return (
     <>
     {isLoading ?
